@@ -44,7 +44,10 @@ public class OrderCreateTest extends BaseTest {
     @Description("Проверяем, что авторизованный пользователь может создать заказ")
     @Test
     public void testCreateOrderWithAuth() {
-        OrderModel order = new OrderModel(List.of("60d3b41abdcacb0026a733c6"));
+        OrderModel order = new OrderModel(List.of(
+                "6acef97852135b001b21a32b",
+                "6acef97852135b001b21a32e"
+        ));
 
         Response response = orderApi.createWithAuth(order, accessToken);
 
@@ -58,7 +61,10 @@ public class OrderCreateTest extends BaseTest {
     @Description("Проверяем, что неавторизованный пользователь может создать заказ")
     @Test
     public void testCreateOrderWithoutAuth() {
-        OrderModel order = new OrderModel(List.of("60d3b41abdcacb0026a733c6"));
+        OrderModel order = new OrderModel(List.of(
+                "6acef97852135b001b21a32b",
+                "6acef97852135b001b21a32e"
+        ));
 
         Response response = orderApi.create(order);
 
@@ -91,6 +97,8 @@ public class OrderCreateTest extends BaseTest {
         Response response = orderApi.create(order);
 
         response.then()
-                .statusCode(SC_INTERNAL_SERVER_ERROR);
+                .statusCode(SC_BAD_REQUEST)
+                .body("success", equalTo(false))
+                .body("message", equalTo("One or more ids provided are incorrect"));
     }
 }

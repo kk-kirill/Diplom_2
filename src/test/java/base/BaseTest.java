@@ -14,7 +14,7 @@ public class BaseTest {
     protected OrderApi orderApi;
 
     public BaseTest() {
-        RestAssured.baseURI = "https://stellarburgers.education-services.ru";
+        RestAssured.baseURI = "https://qa-stellarburgers.education-services.ru";
         requestSpec = given().header("Content-Type", "application/json");
         userApi = new UserApi(requestSpec);
         orderApi = new OrderApi(requestSpec);
