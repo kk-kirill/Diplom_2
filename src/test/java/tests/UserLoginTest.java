@@ -50,13 +50,31 @@ public class UserLoginTest extends BaseTest {
                 .body("accessToken", notNullValue());
     }
 
-    @DisplayName("Логин с неверными данными")
-    @Description("Проверяем ошибку при неверном логине/пароле")
+    @DisplayName("Логин с неверным паролем")
+    @Description("Проверяем ошибку при неверном пароле")
     @Test
-    public void testLoginWithWrongCredentials() {
+    public void testLoginWithWrongPassword() {
         UserModel wrongUser = new UserModel(
                 user.getEmail(),
                 "wrongPassword",
+                user.getName()
+        );
+
+        Response response = userApi.login(wrongUser);
+
+        response.then()
+                .statusCode(SC_UNAUTHORIZED)
+                .body("success", equalTo(false))
+                .body("message", equalTo("email or password are incorrect"));
+    }
+
+    @DisplayName("Логин с неверным логином")
+    @Description("Проверяем ошибку при неверном логине")
+    @Test
+    public void testLoginWithWrongLogin() {
+        UserModel wrongUser = new UserModel(
+                "wrong" + System.currentTimeMillis() + "@yandex.ru",
+                "password123",
                 user.getName()
         );
 

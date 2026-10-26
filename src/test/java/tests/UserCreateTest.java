@@ -52,14 +52,50 @@ public class UserCreateTest extends BaseTest {
                 .body("message", equalTo("User already exists"));
     }
 
-    @DisplayName("Создание пользователя без обязательного поля")
-    @Description("Проверяем ошибку, если не заполнено одно из полей")
+    @DisplayName("Создание пользователя без email")
+    @Description("Проверяем ошибку, если не заполнен email")
     @Test
-    public void testCreateUserWithoutField() {
+    public void testCreateUserWithoutEmail() {
+        UserModel user = new UserModel(
+                null,
+                "password123",
+                "Ivan"
+        );
+
+        Response response = userApi.register(user);
+
+        response.then()
+                .statusCode(SC_FORBIDDEN)
+                .body("success", equalTo(false))
+                .body("message", equalTo("Email, password and name are required fields"));
+    }
+
+    @DisplayName("Создание пользователя без пароля")
+    @Description("Проверяем ошибку, если не заполнен пароль")
+    @Test
+    public void testCreateUserWithoutPassword() {
         UserModel user = new UserModel(
                 "test" + System.currentTimeMillis() + "@yandex.ru",
-                null,  // ← без пароля
+                null,
                 "Ivan"
+        );
+
+        Response response = userApi.register(user);
+
+        response.then()
+                .statusCode(SC_FORBIDDEN)
+                .body("success", equalTo(false))
+                .body("message", equalTo("Email, password and name are required fields"));
+    }
+
+    @DisplayName("Создание пользователя без имени")
+    @Description("Проверяем ошибку, если не заполнено имя")
+    @Test
+    public void testCreateUserWithoutName() {
+        UserModel user = new UserModel(
+                "test" + System.currentTimeMillis() + "@yandex.ru",
+                "password123",
+                null
         );
 
         Response response = userApi.register(user);
